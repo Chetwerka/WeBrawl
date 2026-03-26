@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Brawl Stars WEB — Боевая арена</title>
+    <title>Brawl Stars WEB — Полная версия</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            font-family: 'Segoe UI', 'Poppins', 'Fredoka One', system-ui;
         }
 
         body {
@@ -18,747 +19,781 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', 'Poppins', 'Fredoka One', 'Comic Neue', sans-serif;
-            touch-action: manipulation;
+            padding: 20px;
         }
 
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
+        /* Основное меню-контейнер */
+        .game-wrapper {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 48px;
             padding: 20px;
-            border-radius: 56px;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(3px);
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255,255,255,0.1);
+            backdrop-filter: blur(6px);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5);
+        }
+
+        /* Панель навигации и валют */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e2a2cee;
+            border-radius: 60px;
+            padding: 8px 24px;
+            margin-bottom: 16px;
+            gap: 20px;
+            flex-wrap: wrap;
+            border: 1px solid #ffdd88;
+        }
+
+        .currencies {
+            display: flex;
+            gap: 20px;
+            background: #00000066;
+            padding: 5px 20px;
+            border-radius: 40px;
+        }
+
+        .currency {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #ffefb9;
+        }
+
+        .currency span:first-child {
+            font-size: 1.4rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: #f7b32b;
+            border: none;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.1s linear;
+            box-shadow: 0 4px 0 #9b5e1a;
+        }
+
+        .nav-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #9b5e1a;
+        }
+
+        /* Основной экран (меню или игра) */
+        .screen {
+            display: none;
+            background: #00000077;
+            border-radius: 32px;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Сетка для бойцов, скинов, магазина */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .card {
+            background: #2c2e2eee;
+            border-radius: 28px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.1s;
+            border: 2px solid #f7c56e;
+            box-shadow: 0 5px 0 #7a541e;
+        }
+
+        .card.selected {
+            border: 4px solid #ffdd66;
+            background: #3e3b2c;
+            transform: scale(0.98);
+        }
+
+        .card h3 {
+            color: #ffeaac;
+            margin: 8px 0;
+        }
+
+        .card p {
+            color: #ddd;
+            font-size: 0.8rem;
+        }
+
+        .brawler-icon {
+            font-size: 4rem;
+        }
+
+        .price {
+            background: #000000aa;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        button.shop-btn {
+            background: #4caf50;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 40px;
+            margin-top: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            background: #334e4a;
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .mode-btn.active-mode {
+            background: #f7b32b;
+            color: #1f2a1b;
+            box-shadow: 0 0 10px gold;
         }
 
         canvas {
             display: block;
             margin: 0 auto;
-            border-radius: 32px;
-            box-shadow: 0 12px 28px black, 0 0 0 4px #f7d44a, 0 0 0 8px #aa7e2c;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px black;
             cursor: crosshair;
             background: radial-gradient(circle at 30% 20%, #3b8b4c, #1d5436);
         }
 
-        .info-panel {
+        .game-controls {
+            margin-top: 15px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            gap: 40px;
-            background: #1e2a2cee;
-            padding: 12px 28px;
-            border-radius: 60px;
-            backdrop-filter: blur(4px);
-            border: 1px solid #ffdd88;
-            box-shadow: 0 6px 0 #0a2f2a;
+            justify-content: center;
+            gap: 20px;
         }
 
-        .stats {
-            display: flex;
-            gap: 36px;
-            background: #00000066;
-            padding: 6px 24px;
-            border-radius: 48px;
-        }
-
-        .stat {
-            font-weight: bold;
-            text-shadow: 0 2px 0 #1f3b2c;
-            letter-spacing: 1px;
-        }
-
-        .stat span:first-child {
-            color: #ffdd99;
-            font-size: 1.2rem;
-            margin-right: 8px;
-        }
-
-        .stat span:last-child {
-            color: #fff5cf;
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: #00000077;
-            padding: 0 12px;
+        .back-btn {
+            background: #bc6f2c;
+            padding: 8px 25px;
             border-radius: 40px;
-            line-height: 1.4;
-        }
-
-        .restart-btn {
-            background: #f7b32b;
+            font-weight: bold;
             border: none;
-            font-family: inherit;
-            font-weight: bold;
-            font-size: 1.2rem;
-            padding: 8px 24px;
-            border-radius: 80px;
-            color: #2c2b1f;
             cursor: pointer;
-            transition: 0.1s linear;
-            box-shadow: 0 5px 0 #9b5e1a;
-            letter-spacing: 1px;
         }
 
-        .restart-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #9b5e1a;
-        }
-
-        .controls-tip {
-            background: #000000aa;
-            border-radius: 48px;
-            padding: 6px 20px;
-            font-size: 0.75rem;
-            color: #ffe6b3;
-            font-weight: 500;
-            backdrop-filter: blur(4px);
-            display: flex;
-            gap: 24px;
-        }
-
-        .controls-tip span {
-            background: #ffcf4a;
-            color: #2a2412;
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-weight: bold;
-            margin: 0 4px;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.7; text-shadow: 0 0 0px gold;}
-            100% { opacity: 1; text-shadow: 0 0 6px #ffb347;}
-        }
-
-        .game-over-msg {
-            font-size: 2rem;
-            font-weight: bold;
-            background: #cc2a2add;
-            padding: 8px 24px;
-            border-radius: 60px;
-            animation: pulse 0.6s infinite alternate;
+        .info-text {
+            text-align: center;
+            color: #ffefcf;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-<div>
-    <div class="game-container">
-        <canvas id="gameCanvas" width="900" height="650"></canvas>
-        <div class="info-panel">
-            <div class="stats">
-                <div class="stat"><span>❤️ ЗДОРОВЬЕ</span> <span id="hpValue">100</span></div>
-                <div class="stat"><span>🏆 СЧЁТ</span> <span id="scoreValue">0</span></div>
-                <div class="stat"><span>🤖 ВРАГИ</span> <span id="enemiesCount">0</span></div>
+<div class="game-wrapper">
+    <div class="top-bar">
+        <div class="currencies">
+            <div class="currency">💎 <span id="gems">0</span></div>
+            <div class="currency">🪙 <span id="coins">0</span></div>
+            <div class="currency">✨ <span id="bling">0</span></div>
+            <div class="currency">⚡ <span id="powerPoints">0</span></div>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn" data-screen="menu">🏠 Главная</button>
+            <button class="nav-btn" data-screen="brawlers">🤼 Бойцы</button>
+            <button class="nav-btn" data-screen="shop">🛒 Магазин</button>
+            <button class="nav-btn" data-screen="skins">👗 Скины</button>
+        </div>
+    </div>
+
+    <!-- Экран главного меню -->
+    <div id="menuScreen" class="screen active">
+        <div style="text-align: center; padding: 20px;">
+            <h1 style="color: #ffdd99; text-shadow: 3px 3px 0 #8b5a2b;">⭐ BRAWL STARS WEB ⭐</h1>
+            <div class="mode-selector" id="modeSelector">
+                <div class="mode-btn" data-mode="classic">🏆 Классический</div>
+                <div class="mode-btn" data-mode="survival">🔥 Выживание</div>
+                <div class="mode-btn" data-mode="onslaught">⚔️ Натиск</div>
             </div>
-            <button class="restart-btn" id="restartButton">⚡ НОВАЯ СХВАТКА ⚡</button>
+            <button id="playButton" class="nav-btn" style="font-size: 1.8rem; padding: 12px 40px; margin: 20px;">▶ ИГРАТЬ</button>
+            <div class="info-text">Выбери бойца и режим, сражайся, получай валюту и покупай скины!</div>
         </div>
-        <div class="controls-tip">
-            <div> 🎮 <span>WASD</span> или <span>▲▼◀▶</span> — движение</div>
-            <div> 🖱️ <span>ЛКМ</span> по арене — выстрел в цель</div>
-            <div> ⚡ Перезарядка: 0.3 сек | Урон от врага -20HP</div>
+    </div>
+
+    <!-- Экран выбора бойцов -->
+    <div id="brawlersScreen" class="screen">
+        <h2 style="color:#ffdd99; text-align:center;">Выбери бойца</h2>
+        <div class="grid" id="brawlersGrid"></div>
+        <div class="game-controls"><button class="back-btn" data-back="menu">Назад</button></div>
+    </div>
+
+    <!-- Экран магазина -->
+    <div id="shopScreen" class="screen">
+        <h2 style="color:#ffdd99; text-align:center;">Магазин</h2>
+        <div class="grid" id="shopGrid"></div>
+        <div class="game-controls"><button class="back-btn" data-back="menu">Назад</button></div>
+    </div>
+
+    <!-- Экран скинов -->
+    <div id="skinsScreen" class="screen">
+        <h2 style="color:#ffdd99; text-align:center;">Скины для бойцов</h2>
+        <div class="grid" id="skinsGrid"></div>
+        <div class="game-controls"><button class="back-btn" data-back="menu">Назад</button></div>
+    </div>
+
+    <!-- Игровой экран -->
+    <div id="gameScreen" class="screen">
+        <canvas id="gameCanvas" width="900" height="550"></canvas>
+        <div class="game-controls">
+            <button id="exitGameBtn" class="back-btn">Выйти в меню</button>
         </div>
+        <div class="info-text">❤️ Здоровье: <span id="gameHp">100</span> | 🏆 Счёт: <span id="gameScore">0</span> | 🎯 Врагов: <span id="gameEnemies">0</span></div>
     </div>
 </div>
 
 <script>
-    (function(){
-        // ---------- CANVAS ----------
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+    // ------------------- ДАННЫЕ ИГРЫ -------------------
+    let gameRunning = false;
+    let currentMode = "classic";   // classic, survival, onslaught
+    let selectedBrawlerId = "shelly";
+    let activeSkin = null; // для каждого бойца отдельно: храним в объекте skinsOwned и activeSkin per brawler
+    let currencies = { gems: 50, coins: 500, bling: 200, powerPoints: 30 };
+    let brawlers = {};
+    let skins = {}; // { skinId: { name, brawlerId, priceGems, priceCoins, emoji, owned } }
+    let ownedSkins = []; // список id купленных скинов
+    let activeSkins = {}; // { brawlerId: skinId } активный скин для бойца
 
-        // ---------- ИГРОВЫЕ ПАРАМЕТРЫ ----------
-        let gameRunning = true;
-        let score = 0;
-        
-        // Игрок
-        const player = {
-            x: canvas.width/2,
-            y: canvas.height/2,
-            radius: 20,
-            health: 100,
-            maxHealth: 100,
-            invincibleTimer: 0,      // >0 значит неуязвимость (секунды)
-            speed: 5.2
+    // Определение бойцов
+    brawlers = {
+        shelly: { name: "Шелли", emoji: "🔫", baseHp: 100, speed: 5.2, attackDamage: 100, attackCooldown: 18, projectileSpeed: 9, radius: 20, color: "#F9A825", desc: "Дробовик, средняя скорость" },
+        colt: { name: "Кольт", emoji: "🤠", baseHp: 85, speed: 5.5, attackDamage: 75, attackCooldown: 12, projectileSpeed: 11, radius: 18, color: "#C7A56B", desc: "Высокая скорострельность" },
+        bull: { name: "Бык", emoji: "🐂", baseHp: 130, speed: 4.8, attackDamage: 120, attackCooldown: 22, projectileSpeed: 7.5, radius: 22, color: "#B85C1A", desc: "Танк, высокий урон" }
+    };
+
+    // Скины (некоторые доступны за валюту)
+    skins = {
+        default_shelly: { name: "Классика", brawlerId: "shelly", priceGems: 0, priceCoins: 0, emoji: "🔫", owned: true },
+        golden_shelly: { name: "Золотая Шелли", brawlerId: "shelly", priceGems: 30, priceCoins: 0, emoji: "🌟", owned: false },
+        dark_colt: { name: "Теневой Кольт", brawlerId: "colt", priceGems: 25, priceCoins: 0, emoji: "🌑", owned: false },
+        bull_oni: { name: "Они-Бык", brawlerId: "bull", priceGems: 40, priceCoins: 0, emoji: "👹", owned: false },
+        punk_shelly: { name: "Панк Шелли", brawlerId: "shelly", priceGems: 0, priceCoins: 300, emoji: "🎸", owned: false }
+    };
+
+    // Магазин: предметы (улучшения, скины, очки силы)
+    let shopItems = [
+        { id: "pp_50", name: "50 ⚡ Очков силы", priceCoins: 150, type: "powerPoints", amount: 50 },
+        { id: "pp_150", name: "150 ⚡ Очков силы", priceCoins: 400, type: "powerPoints", amount: 150 },
+        { id: "bling_100", name: "100 ✨ Блингов", priceGems: 10, type: "bling", amount: 100 },
+        { id: "coins_300", name: "300 🪙 Монет", priceGems: 15, type: "coins", amount: 300 }
+    ];
+
+    // Улучшения бойцов (очки силы -> повышение урона и здоровья)
+    let brawlerUpgrades = {}; // { brawlerId: { hpBonus, dmgBonus, level } }
+    for (let id in brawlers) {
+        brawlerUpgrades[id] = { hpBonus: 0, dmgBonus: 0, level: 0 };
+    }
+
+    // Функция сохранения/загрузки
+    function saveGame() {
+        const data = {
+            currencies, ownedSkins, activeSkins, brawlerUpgrades, selectedBrawlerId, currentMode
         };
-        
-        // Динамические объекты
-        let enemies = [];      // каждый {x, y, radius, hp, color, speed, angleToPlayer? просто движется к игроку}
-        let projectiles = [];  // {x, y, radius, vx, vy, damage, life}
-        
-        // Параметры стрельбы
-        let shootCooldown = 0;      // кадры до след. выстрела
-        const SHOOT_DELAY_FRAMES = 18;  // ~0.3 сек при 60fps
-        const PROJECTILE_RADIUS = 6;
-        const PROJECTILE_DAMAGE = 100;   // враги умирают с 1 попадания
-        const PROJECTILE_SPEED = 8.5;
-        
-        // Параметры врагов
-        const ENEMY_BASE_RADIUS = 16;
-        const ENEMY_BASE_SPEED = 1.7;
-        const ENEMY_DAMAGE = 20;
-        const INVINCIBLE_DURATION = 28;   // кадры неуязвимости (~0.47 сек)
-        
-        // Спавн врагов
-        let spawnCounter = 0;
-        const SPAWN_DELAY_FRAMES = 55;    // интервал спавна
-        const MAX_ENEMIES = 12;
-        
-        // Управление (движение)
-        const keys = {
-            ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false,
-            w: false, s: false, a: false, d: false
-        };
-        
-        // ---------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ----------
-        function clamp(value, min, max) {
-            return Math.min(max, Math.max(min, value));
+        localStorage.setItem("brawlStarsSave", JSON.stringify(data));
+    }
+
+    function loadGame() {
+        const saved = localStorage.getItem("brawlStarsSave");
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                currencies = data.currencies || currencies;
+                ownedSkins = data.ownedSkins || [];
+                activeSkins = data.activeSkins || {};
+                brawlerUpgrades = data.brawlerUpgrades || brawlerUpgrades;
+                selectedBrawlerId = data.selectedBrawlerId || "shelly";
+                currentMode = data.currentMode || "classic";
+                // применить owned к скинам
+                for (let s of ownedSkins) if (skins[s]) skins[s].owned = true;
+            } catch(e) {}
         }
-        
-        // проверка коллизии кругов
-        function circlesCollide(x1,y1,r1, x2,y2,r2) {
-            const dx = x1 - x2;
-            const dy = y1 - y2;
-            const dist = Math.hypot(dx, dy);
-            return dist < r1 + r2;
-        }
-        
-        // рестарт игры
-        function restartGame() {
-            gameRunning = true;
-            score = 0;
-            player.health = player.maxHealth;
-            player.x = canvas.width/2;
-            player.y = canvas.height/2;
-            player.invincibleTimer = 0;
-            enemies = [];
-            projectiles = [];
-            shootCooldown = 0;
-            spawnCounter = 10;  // быстрый первый спавн
-            updateUI();
-        }
-        
-        // спавн врага в безопасной зоне (не на игроке)
-        function spawnEnemy() {
-            if(!gameRunning) return;
-            if(enemies.length >= MAX_ENEMIES) return;
-            
-            let side = Math.floor(Math.random() * 4); // 0-3: края
-            let x, y;
-            const padding = 35;
-            if(side === 0) { // верх
-                x = Math.random() * (canvas.width - 2*padding) + padding;
-                y = padding;
-            } else if(side === 1) { // низ
-                x = Math.random() * (canvas.width - 2*padding) + padding;
-                y = canvas.height - padding;
-            } else if(side === 2) { // лево
-                x = padding;
-                y = Math.random() * (canvas.height - 2*padding) + padding;
-            } else { // право
-                x = canvas.width - padding;
-                y = Math.random() * (canvas.height - 2*padding) + padding;
-            }
-            
-            // дополнительно: чтобы враг не спавнился прямо на игрока
-            const dx = x - player.x;
-            const dy = y - player.y;
-            const distToPlayer = Math.hypot(dx, dy);
-            if(distToPlayer < 70) {
-                // смещаем немного
-                const angle = Math.atan2(dy, dx);
-                x = player.x + Math.cos(angle) * 100;
-                y = player.y + Math.sin(angle) * 100;
-                x = clamp(x, 25, canvas.width-25);
-                y = clamp(y, 25, canvas.height-25);
-            }
-            
-            enemies.push({
-                x: x,
-                y: y,
-                radius: ENEMY_BASE_RADIUS,
-                hp: 1,
-                speed: ENEMY_BASE_SPEED + Math.random() * 0.6,
-                color: `hsl(${Math.floor(Math.random() * 20 + 340)}, 70%, 55%)` // красноватые тона
-            });
-        }
-        
-        // выстрел в направлении мыши (координаты мыши относительно canvas)
-        let mouseX = player.x, mouseY = player.y; // цель для прицела
-        
-        function shootTowards(targetX, targetY) {
-            if(!gameRunning) return;
-            if(shootCooldown > 0) return;
-            
-            // направление от игрока к цели
-            let dx = targetX - player.x;
-            let dy = targetY - player.y;
-            const len = Math.hypot(dx, dy);
-            if(len < 0.001) return;
-            dx /= len;
-            dy /= len;
-            
-            projectiles.push({
-                x: player.x,
-                y: player.y,
-                radius: PROJECTILE_RADIUS,
-                vx: dx * PROJECTILE_SPEED,
-                vy: dy * PROJECTILE_SPEED,
-                damage: PROJECTILE_DAMAGE,
-                life: true
-            });
-            shootCooldown = SHOOT_DELAY_FRAMES;
-            
-            // маленькая вибрация/эффект (для отзывчивости)
-        }
-        
-        // обновление UI (здоровье, счет, враги)
-        function updateUI() {
-            document.getElementById('hpValue').innerText = Math.max(0, player.health);
-            document.getElementById('scoreValue').innerText = score;
-            document.getElementById('enemiesCount').innerText = enemies.length;
-        }
-        
-        // обработка получения урона игроком
-        function damagePlayer(amount) {
-            if(!gameRunning) return;
-            if(player.invincibleTimer > 0) return;
-            player.health -= amount;
-            if(player.health <= 0) {
-                player.health = 0;
-                gameRunning = false;
-                updateUI();
-                return;
-            }
-            player.invincibleTimer = INVINCIBLE_DURATION;
-            updateUI();
-        }
-        
-        // обновление движения и логики
-        function updateGame() {
-            if(!gameRunning) return;
-            
-            // ---------- 1) Движение игрока (WASD + стрелки) ----------
-            let moveX = 0, moveY = 0;
-            if(keys.ArrowUp || keys.w) moveY -= 1;
-            if(keys.ArrowDown || keys.s) moveY += 1;
-            if(keys.ArrowLeft || keys.a) moveX -= 1;
-            if(keys.ArrowRight || keys.d) moveX += 1;
-            
-            if(moveX !== 0 || moveY !== 0) {
-                const len = Math.hypot(moveX, moveY);
-                moveX = moveX / len;
-                moveY = moveY / len;
-            }
-            
-            let newX = player.x + moveX * player.speed;
-            let newY = player.y + moveY * player.speed;
-            // границы (с учетом радиуса)
-            player.x = clamp(newX, player.radius + 2, canvas.width - player.radius - 2);
-            player.y = clamp(newY, player.radius + 2, canvas.height - player.radius - 2);
-            
-            // таймер неуязвимости
-            if(player.invincibleTimer > 0) {
-                player.invincibleTimer--;
-            }
-            
-            // перезарядка выстрела
-            if(shootCooldown > 0) shootCooldown--;
-            
-            // ---------- 2) Движение врагов к игроку ----------
-            for(let i = 0; i < enemies.length; i++) {
-                const e = enemies[i];
-                const dx = player.x - e.x;
-                const dy = player.y - e.y;
-                const dist = Math.hypot(dx, dy);
-                if(dist > 0.01) {
-                    const move = e.speed;
-                    const stepX = (dx / dist) * move;
-                    const stepY = (dy / dist) * move;
-                    e.x += stepX;
-                    e.y += stepY;
-                }
-                // границы для врагов (чтобы не выходили)
-                e.x = clamp(e.x, e.radius + 2, canvas.width - e.radius - 2);
-                e.y = clamp(e.y, e.radius + 2, canvas.height - e.radius - 2);
-            }
-            
-            // ---------- 3) Столкновения враг-игрок (наносит урон и враг исчезает) ----------
-            for(let i = enemies.length-1; i >= 0; i--) {
-                const e = enemies[i];
-                if(circlesCollide(player.x, player.y, player.radius, e.x, e.y, e.radius)) {
-                    // наносим урон игроку
-                    damagePlayer(ENEMY_DAMAGE);
-                    // враг умирает от удара (как самоуничтожение, чтобы избежать спама)
-                    enemies.splice(i,1);
-                    if(player.health <= 0) {
-                        gameRunning = false;
-                        updateUI();
-                        return;
-                    }
-                }
-            }
-            
-            // ---------- 4) Снаряды и их коллизия с врагами ----------
-            for(let i = projectiles.length-1; i >= 0; i--) {
-                const p = projectiles[i];
-                // движение
-                p.x += p.vx;
-                p.y += p.vy;
-                // границы - удалить если за пределами
-                if(p.x + p.radius < 0 || p.x - p.radius > canvas.width || p.y + p.radius < 0 || p.y - p.radius > canvas.height) {
-                    projectiles.splice(i,1);
-                    continue;
-                }
-                
-                let hit = false;
-                for(let j = enemies.length-1; j >= 0; j--) {
-                    const e = enemies[j];
-                    if(circlesCollide(p.x, p.y, p.radius, e.x, e.y, e.radius)) {
-                        // попадание по врагу
-                        enemies.splice(j,1);
-                        hit = true;
-                        score++;
-                        updateUI();
-                        break;
-                    }
-                }
-                if(hit) {
-                    projectiles.splice(i,1);
-                }
-            }
-            
-            // ---------- 5) Спавн врагов (таймер) ----------
-            if(gameRunning && enemies.length < MAX_ENEMIES) {
-                if(spawnCounter <= 0) {
-                    spawnEnemy();
-                    spawnCounter = SPAWN_DELAY_FRAMES;
-                    // дополнительный спавн иногда по два для сложности? но лимит 12
-                    if(enemies.length < MAX_ENEMIES && Math.random() < 0.25 && gameRunning) {
-                        spawnEnemy();
-                    }
-                } else {
-                    spawnCounter--;
-                }
-            } else if(spawnCounter > 0) {
-                spawnCounter--;
-            }
-            
-            // если игра закончилась во время обновления, не спавним больше
-            if(player.health <= 0) {
-                gameRunning = false;
-            }
-            
-            updateUI(); // обновляем кол-во врагов и счёт
-        }
-        
-        // ---------- ОТРИСОВКА ВСЕГО (стиль Brawl Stars) ----------
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // --- Декоративный фон (травка, узоры) ---
-            ctx.save();
-            // сетка арены
-            ctx.strokeStyle = "#a5d6a5";
-            ctx.lineWidth = 1.5;
-            for(let i = 0; i < canvas.width; i+= 60){
-                ctx.beginPath();
-                ctx.moveTo(i,0);
-                ctx.lineTo(i,canvas.height);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(0,i);
-                ctx.lineTo(canvas.width,i);
-                ctx.stroke();
-            }
-            // полупрозрачные блики
-            ctx.fillStyle = "#d4f1b980";
-            for(let i = 0; i < 12; i++) {
-                ctx.beginPath();
-                ctx.arc(120+ i*70, 80+ (i%3)*90, 28, 0, Math.PI*2);
-                ctx.fill();
-            }
-            
-            // ---- Снаряды (энергетические шары) ----
-            for(const p of projectiles) {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius-1, 0, Math.PI*2);
-                ctx.fillStyle = "#FFE484";
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius-2, 0, Math.PI*2);
-                ctx.fillStyle = "#FFB347";
-                ctx.fill();
-                ctx.shadowBlur = 12;
-                ctx.shadowColor = "#f9a825";
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius-3, 0, Math.PI*2);
-                ctx.fillStyle = "white";
-                ctx.fill();
-                ctx.shadowBlur = 0;
-            }
-            
-            // ---- Враги (злобные бандиты) ----
-            for(const e of enemies) {
-                // градиент
-                const grad = ctx.createRadialGradient(e.x-5, e.y-5, 3, e.x, e.y, e.radius);
-                grad.addColorStop(0, "#E34D4D");
-                grad.addColorStop(1, "#A61C1C");
-                ctx.beginPath();
-                ctx.arc(e.x, e.y, e.radius, 0, Math.PI*2);
-                ctx.fillStyle = grad;
-                ctx.fill();
-                ctx.strokeStyle = "#5a1e1e";
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                // злые глаза
-                ctx.fillStyle = "white";
-                ctx.beginPath();
-                ctx.arc(e.x-6, e.y-4, 4, 0, Math.PI*2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(e.x+6, e.y-4, 4, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#2C0F0F";
-                ctx.beginPath();
-                ctx.arc(e.x-6.5, e.y-5, 1.8, 0, Math.PI*2);
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(e.x+5.5, e.y-5, 1.8, 0, Math.PI*2);
-                ctx.fill();
-                // брови
-                ctx.beginPath();
-                ctx.strokeStyle = "#3b0d0d";
-                ctx.lineWidth = 3;
-                ctx.moveTo(e.x-10, e.y-9);
-                ctx.lineTo(e.x-4, e.y-7);
-                ctx.moveTo(e.x+10, e.y-9);
-                ctx.lineTo(e.x+4, e.y-7);
-                ctx.stroke();
-                // рожки
-                ctx.beginPath();
-                ctx.moveTo(e.x-12, e.y-14);
-                ctx.lineTo(e.x-4, e.y-12);
-                ctx.lineTo(e.x-8, e.y-19);
-                ctx.fillStyle = "#6B2E2E";
-                ctx.fill();
-                ctx.beginPath();
-                ctx.moveTo(e.x+12, e.y-14);
-                ctx.lineTo(e.x+4, e.y-12);
-                ctx.lineTo(e.x+8, e.y-19);
-                ctx.fill();
-            }
-            
-            // ---- Игрок (Brawler) яркий и крутой ----
-            const p = player;
-            // свечение
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = "#fbc02d";
-            const gradPlayer = ctx.createLinearGradient(p.x-8, p.y-8, p.x+8, p.y+12);
-            gradPlayer.addColorStop(0, "#FFD966");
-            gradPlayer.addColorStop(1, "#E6A017");
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
-            ctx.fillStyle = gradPlayer;
-            ctx.fill();
-            ctx.strokeStyle = "#FFB347";
-            ctx.lineWidth = 2.5;
-            ctx.stroke();
-            // маска / звездный боец
-            ctx.fillStyle = "#34200c";
-            ctx.beginPath();
-            ctx.ellipse(p.x-6, p.y-2, 4, 5, 0, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.ellipse(p.x+6, p.y-2, 4, 5, 0, 0, Math.PI*2);
-            ctx.fill();
-            ctx.fillStyle = "white";
-            ctx.beginPath();
-            ctx.arc(p.x-6, p.y-4, 2, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(p.x+6, p.y-4, 2, 0, Math.PI*2);
-            ctx.fill();
-            ctx.fillStyle = "#222";
-            ctx.beginPath();
-            ctx.arc(p.x-6.5, p.y-5, 0.9, 0, Math.PI*2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(p.x+5.5, p.y-5, 0.9, 0, Math.PI*2);
-            ctx.fill();
-            // улыбка
-            ctx.beginPath();
-            ctx.arc(p.x, p.y+4, 8, 0.05, Math.PI - 0.05);
-            ctx.strokeStyle = "#4a2a0a";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            // повязка / бандана
-            ctx.beginPath();
-            ctx.moveTo(p.x-14, p.y-12);
-            ctx.lineTo(p.x, p.y-18);
-            ctx.lineTo(p.x+14, p.y-12);
-            ctx.fillStyle = "#E63946";
-            ctx.fill();
-            ctx.fillStyle = "#FFF1B5";
-            ctx.font = `bold ${p.radius-4}px "Segoe UI"`;
-            ctx.shadowBlur = 4;
-            ctx.fillText("⚡", p.x-10, p.y-13);
-            ctx.shadowBlur = 0;
-            
-            // индикатор неуязвимости (щит)
-            if(player.invincibleTimer > 0) {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius+3, 0, Math.PI*2);
-                ctx.strokeStyle = "#FFF7B0";
-                ctx.lineWidth = 3;
-                ctx.setLineDash([6, 8]);
-                ctx.stroke();
-                ctx.setLineDash([]);
-            }
-            
-            // полоска здоровья над игроком
-            const hpPercent = player.health / player.maxHealth;
-            const barWidth = 50;
-            const barX = p.x - barWidth/2;
-            const barY = p.y - p.radius - 8;
-            ctx.fillStyle = "#631a1a";
-            ctx.fillRect(barX, barY, barWidth, 8);
-            ctx.fillStyle = "#ff5e5e";
-            ctx.fillRect(barX, barY, barWidth * hpPercent, 8);
-            ctx.fillStyle = "#ffd966";
-            ctx.font = "bold 12monospace";
-            ctx.shadowBlur = 0;
-            ctx.fillText(`${player.health}`, p.x-12, barY-2);
-            
-            // ---- Прицел (направление мыши) ----
-            if(gameRunning) {
-                ctx.beginPath();
-                ctx.arc(mouseX, mouseY, 9, 0, Math.PI*2);
-                ctx.strokeStyle = "#ffea9e";
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(mouseX-16, mouseY);
-                ctx.lineTo(mouseX+16, mouseY);
-                ctx.moveTo(mouseX, mouseY-16);
-                ctx.lineTo(mouseX, mouseY+16);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.arc(mouseX, mouseY, 4, 0, Math.PI*2);
-                ctx.fillStyle = "#ffffbbaa";
-                ctx.fill();
-            }
-            
-            // Game Over overlay
-            if(!gameRunning && player.health <= 0) {
-                ctx.font = "bold 44 'Fredoka One'";
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = "#FFD966";
-                ctx.shadowColor = "black";
-                ctx.fillText("GAME OVER", canvas.width/2-130, canvas.height/2-40);
-                ctx.font = "24px 'Segoe UI'";
-                ctx.fillStyle = "#FFF2B5";
-                ctx.fillText("нажми «НОВАЯ СХВАТКА»", canvas.width/2-150, canvas.height/2+30);
-                ctx.fillStyle = "#ffbc6e";
-                ctx.font = "18px monospace";
-                ctx.fillText("враги раздавят, но ты сражался как легенда", canvas.width/2-190, canvas.height/2+85);
-            }
-            
-            // маленький счетчик врагов на арене
-            ctx.font = "bold 20monospace";
-            ctx.fillStyle = "#FFF6CF";
-            ctx.shadowBlur = 2;
-            ctx.fillText("⚔️ " + enemies.length, 20, 50);
-            ctx.restore();
-        }
-        
-        // ---------- ОБРАБОТЧИКИ УПРАВЛЕНИЯ ----------
-        function handleKeyDown(e) {
-            const key = e.key;
-            if(keys.hasOwnProperty(key)) {
-                keys[key] = true;
-                e.preventDefault();
-            }
-            // блокировка прокрутки стрелками
-            if (key === "ArrowUp" || key === "ArrowDown" || key === "ArrowLeft" || key === "ArrowRight") {
-                e.preventDefault();
-            }
-        }
-        
-        function handleKeyUp(e) {
-            const key = e.key;
-            if(keys.hasOwnProperty(key)) {
-                keys[key] = false;
-                e.preventDefault();
-            }
-        }
-        
-        function getMousePos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            let mouseCanvasX = (e.clientX - rect.left) * scaleX;
-            let mouseCanvasY = (e.clientY - rect.top) * scaleY;
-            mouseCanvasX = clamp(mouseCanvasX, 0, canvas.width);
-            mouseCanvasY = clamp(mouseCanvasY, 0, canvas.height);
-            return { mx: mouseCanvasX, my: mouseCanvasY };
-        }
-        
-        function onMouseMove(e) {
-            const { mx, my } = getMousePos(e);
-            mouseX = mx;
-            mouseY = my;
-        }
-        
-        function onMouseShoot(e) {
-            if(!gameRunning) return;
-            const { mx, my } = getMousePos(e);
-            shootTowards(mx, my);
-            e.preventDefault();
-        }
-        
-        // запрет контекстного меню на канвасе
-        canvas.addEventListener('contextmenu', (e) => e.preventDefault());
-        canvas.addEventListener('mousemove', onMouseMove);
-        canvas.addEventListener('mousedown', onMouseShoot);
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
-        
-        // кнопка рестарта
-        const restartBtn = document.getElementById('restartButton');
-        restartBtn.addEventListener('click', () => {
-            restartGame();
-            gameRunning = true;
-            if(player.health <= 0) player.health = player.maxHealth;
-            player.invincibleTimer = 0;
-            enemies = [];
-            projectiles = [];
-            shootCooldown = 0;
-            spawnCounter = 5;
-            score = 0;
-            updateUI();
-        });
-        
-        // стартовый спавн пары врагов
-        function initSpawn() {
-            for(let i=0; i<3; i++) spawnEnemy();
-            spawnCounter = 30;
-        }
-        
-        // АНИМАЦИОННЫЙ ЦИКЛ
-        function gameLoop() {
-            updateGame();
-            draw();
-            requestAnimationFrame(gameLoop);
-        }
-        
-        restartGame();    // начальное состояние
-        initSpawn();
+        // Стартовые скины по умолчанию
+        if (!ownedSkins.includes("default_shelly")) ownedSkins.push("default_shelly");
+        skins.default_shelly.owned = true;
         updateUI();
-        gameLoop();
-    })();
+    }
+
+    function updateUI() {
+        document.getElementById("gems").innerText = currencies.gems;
+        document.getElementById("coins").innerText = currencies.coins;
+        document.getElementById("bling").innerText = currencies.bling;
+        document.getElementById("powerPoints").innerText = currencies.powerPoints;
+    }
+
+    // Добавить валюту
+    function addCurrency(type, amount) {
+        if (currencies[type] !== undefined) currencies[type] += amount;
+        updateUI();
+        saveGame();
+    }
+
+    // Проверка покупки
+    function canAfford(priceGems, priceCoins) {
+        return currencies.gems >= priceGems && currencies.coins >= priceCoins;
+    }
+    function spend(priceGems, priceCoins) {
+        if (canAfford(priceGems, priceCoins)) {
+            currencies.gems -= priceGems;
+            currencies.coins -= priceCoins;
+            updateUI();
+            saveGame();
+            return true;
+        }
+        return false;
+    }
+
+    // Покупка скина
+    function buySkin(skinId) {
+        const skin = skins[skinId];
+        if (!skin || skin.owned) return false;
+        if (spend(skin.priceGems, skin.priceCoins)) {
+            skin.owned = true;
+            ownedSkins.push(skinId);
+            saveGame();
+            alert(`Скин ${skin.name} куплен!`);
+            renderSkinsScreen();
+            return true;
+        } else {
+            alert("Не хватает ресурсов!");
+            return false;
+        }
+    }
+
+    // Активировать скин для бойца
+    function setActiveSkin(brawlerId, skinId) {
+        const skin = skins[skinId];
+        if (skin && skin.brawlerId === brawlerId && skin.owned) {
+            activeSkins[brawlerId] = skinId;
+            saveGame();
+            renderSkinsScreen();
+        }
+    }
+
+    // Получить внешний вид бойца (эмодзи с учётом скина)
+    function getBrawlerSkinEmoji(brawlerId) {
+        const active = activeSkins[brawlerId];
+        if (active && skins[active]) return skins[active].emoji;
+        return brawlers[brawlerId].emoji;
+    }
+
+    // Рендеры экранов
+    function renderBrawlersScreen() {
+        const container = document.getElementById("brawlersGrid");
+        container.innerHTML = "";
+        for (let id in brawlers) {
+            const b = brawlers[id];
+            const upgrades = brawlerUpgrades[id];
+            const card = document.createElement("div");
+            card.className = `card ${selectedBrawlerId === id ? "selected" : ""}`;
+            card.innerHTML = `
+                <div class="brawler-icon">${getBrawlerSkinEmoji(id)}</div>
+                <h3>${b.name}</h3>
+                <p>❤️ ${b.baseHp + upgrades.hpBonus} | 💥 ${b.attackDamage + upgrades.dmgBonus}</p>
+                <p>⚡ Ур. ${upgrades.level} | ⚡ сила: ${upgrades.hpBonus/5 + upgrades.dmgBonus/2}</p>
+                <button class="shop-btn" data-upgrade="${id}">Улучшить (${50 + upgrades.level*30} 🪙 + 10⚡)</button>
+                <button class="shop-btn" data-select="${id}">Выбрать</button>
+            `;
+            container.appendChild(card);
+        }
+        container.querySelectorAll("[data-upgrade]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const brawlerId = btn.dataset.upgrade;
+                upgradeBrawler(brawlerId);
+            });
+        });
+        container.querySelectorAll("[data-select]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                const brawlerId = btn.dataset.select;
+                selectedBrawlerId = brawlerId;
+                renderBrawlersScreen();
+                saveGame();
+            });
+        });
+    }
+
+    function upgradeBrawler(brawlerId) {
+        const up = brawlerUpgrades[brawlerId];
+        const costCoins = 50 + up.level * 30;
+        const costPP = 10;
+        if (currencies.coins >= costCoins && currencies.powerPoints >= costPP) {
+            currencies.coins -= costCoins;
+            currencies.powerPoints -= costPP;
+            up.level++;
+            up.hpBonus += 5;
+            up.dmgBonus += 3;
+            updateUI();
+            saveGame();
+            renderBrawlersScreen();
+        } else {
+            alert(`Не хватает: нужно ${costCoins} 🪙 и ${costPP} ⚡`);
+        }
+    }
+
+    function renderShopScreen() {
+        const container = document.getElementById("shopGrid");
+        container.innerHTML = "";
+        shopItems.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <h3>${item.name}</h3>
+                <div class="price">💰 ${item.priceCoins > 0 ? item.priceCoins + " 🪙" : ""} ${item.priceGems > 0 ? item.priceGems + " 💎" : ""}</div>
+                <button class="shop-btn" data-buy="${item.id}">Купить</button>
+            `;
+            container.appendChild(card);
+        });
+        container.querySelectorAll("[data-buy]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const item = shopItems.find(i => i.id === btn.dataset.buy);
+                if (item) {
+                    if (item.priceCoins && currencies.coins >= item.priceCoins) {
+                        currencies.coins -= item.priceCoins;
+                        if (item.type === "powerPoints") addCurrency("powerPoints", item.amount);
+                        if (item.type === "bling") addCurrency("bling", item.amount);
+                        if (item.type === "coins") addCurrency("coins", item.amount);
+                        updateUI();
+                        saveGame();
+                        renderShopScreen();
+                        alert("Покупка совершена!");
+                    } else if (item.priceGems && currencies.gems >= item.priceGems) {
+                        currencies.gems -= item.priceGems;
+                        if (item.type === "powerPoints") addCurrency("powerPoints", item.amount);
+                        if (item.type === "bling") addCurrency("bling", item.amount);
+                        if (item.type === "coins") addCurrency("coins", item.amount);
+                        updateUI();
+                        saveGame();
+                        renderShopScreen();
+                        alert("Покупка совершена!");
+                    } else alert("Недостаточно валюты!");
+                }
+            });
+        });
+    }
+
+    function renderSkinsScreen() {
+        const container = document.getElementById("skinsGrid");
+        container.innerHTML = "";
+        for (let sid in skins) {
+            const skin = skins[sid];
+            const b = brawlers[skin.brawlerId];
+            const isActive = activeSkins[skin.brawlerId] === sid;
+            const card = document.createElement("div");
+            card.className = `card ${isActive ? "selected" : ""}`;
+            card.innerHTML = `
+                <div class="brawler-icon">${skin.emoji}</div>
+                <h3>${skin.name}</h3>
+                <p>Для: ${b.name}</p>
+                <p>${skin.priceGems > 0 ? skin.priceGems+" 💎" : ""} ${skin.priceCoins > 0 ? skin.priceCoins+" 🪙" : "Базовый"}</p>
+                ${!skin.owned ? `<button class="shop-btn" data-buy-skin="${sid}">Купить</button>` : `<button class="shop-btn" data-equip-skin="${sid}">Надеть</button>`}
+            `;
+            container.appendChild(card);
+        }
+        container.querySelectorAll("[data-buy-skin]").forEach(btn => {
+            btn.addEventListener("click", (e) => buySkin(btn.dataset.buySkin));
+        });
+        container.querySelectorAll("[data-equip-skin]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const skinId = btn.dataset.equipSkin;
+                const skin = skins[skinId];
+                if (skin && skin.owned) setActiveSkin(skin.brawlerId, skinId);
+            });
+        });
+    }
+
+    // ------------------- ИГРОВАЯ ЛОГИКА (АРЕНА) -------------------
+    let gameLoopId = null;
+    let player = { x: 450, y: 275, radius: 20, health: 100, maxHealth: 100, invincibleTimer: 0, speed: 5.2 };
+    let enemies = [];
+    let projectiles = [];
+    let shootCooldown = 0;
+    let gameScore = 0;
+    let wave = 1;
+    let spawnTimer = 0;
+    let currentBrawlerStats = null;
+
+    function getBrawlerStats() {
+        const b = brawlers[selectedBrawlerId];
+        const up = brawlerUpgrades[selectedBrawlerId];
+        return {
+            hp: b.baseHp + up.hpBonus,
+            damage: b.attackDamage + up.dmgBonus,
+            speed: b.speed,
+            attackCooldown: b.attackCooldown,
+            projectileSpeed: b.projectileSpeed,
+            radius: b.radius
+        };
+    }
+
+    function initGame() {
+        const stats = getBrawlerStats();
+        player.health = stats.hp;
+        player.maxHealth = stats.hp;
+        player.speed = stats.speed;
+        player.radius = stats.radius;
+        player.x = canvas.width/2;
+        player.y = canvas.height/2;
+        player.invincibleTimer = 0;
+        enemies = [];
+        projectiles = [];
+        shootCooldown = 0;
+        gameScore = 0;
+        wave = 1;
+        spawnTimer = 10;
+        updateGameUI();
+    }
+
+    function spawnEnemy() {
+        if (!gameRunning) return;
+        let side = Math.floor(Math.random() * 4);
+        let x, y, padding = 40;
+        if(side === 0) { x = Math.random() * (canvas.width-2*padding) + padding; y = padding; }
+        else if(side === 1) { x = Math.random() * (canvas.width-2*padding) + padding; y = canvas.height - padding; }
+        else if(side === 2) { x = padding; y = Math.random() * (canvas.height-2*padding) + padding; }
+        else { x = canvas.width - padding; y = Math.random() * (canvas.height-2*padding) + padding; }
+        const enemySpeed = 1.6 + Math.random() * 0.8;
+        enemies.push({
+            x, y, radius: 16, hp: 1, speed: enemySpeed,
+            color: `hsl(${Math.random() * 30 + 340}, 70%, 55%)`
+        });
+    }
+
+    function shootAt(targetX, targetY) {
+        if(!gameRunning) return;
+        if(shootCooldown > 0) return;
+        const stats = getBrawlerStats();
+        let dx = targetX - player.x;
+        let dy = targetY - player.y;
+        let len = Math.hypot(dx, dy);
+        if(len < 0.001) return;
+        dx /= len; dy /= len;
+        projectiles.push({
+            x: player.x, y: player.y, radius: 6,
+            vx: dx * stats.projectileSpeed, vy: dy * stats.projectileSpeed,
+            damage: stats.damage
+        });
+        shootCooldown = stats.attackCooldown;
+    }
+
+    function updateGameLogic() {
+        if(!gameRunning) return;
+        const stats = getBrawlerStats();
+        // движение WASD
+        let moveX = 0, moveY = 0;
+        if(keys.ArrowUp || keys.w) moveY -= 1;
+        if(keys.ArrowDown || keys.s) moveY += 1;
+        if(keys.ArrowLeft || keys.a) moveX -= 1;
+        if(keys.ArrowRight || keys.d) moveX += 1;
+        if(moveX !== 0 || moveY !== 0) { let len = Math.hypot(moveX, moveY); moveX/=len; moveY/=len; }
+        player.x += moveX * player.speed;
+        player.y += moveY * player.speed;
+        player.x = Math.min(Math.max(player.x, player.radius+5), canvas.width - player.radius-5);
+        player.y = Math.min(Math.max(player.y, player.radius+5), canvas.height - player.radius-5);
+
+        if(player.invincibleTimer > 0) player.invincibleTimer--;
+        if(shootCooldown > 0) shootCooldown--;
+
+        // враги
+        for(let e of enemies) {
+            let dx = player.x - e.x, dy = player.y - e.y;
+            let dist = Math.hypot(dx, dy);
+            if(dist > 0.01) { e.x += (dx/dist)*e.speed; e.y += (dy/dist)*e.speed; }
+            e.x = Math.min(Math.max(e.x, e.radius+5), canvas.width - e.radius-5);
+            e.y = Math.min(Math.max(e.y, e.radius+5), canvas.height - e.radius-5);
+        }
+
+        // столкновения враг-игрок
+        for(let i=enemies.length-1; i>=0; i--) {
+            if(circlesCollide(player, enemies[i])) {
+                if(player.invincibleTimer <= 0) {
+                    player.health -= 20;
+                    player.invincibleTimer = 25;
+                    if(player.health <= 0) { gameRunning = false; updateGameUI(); }
+                }
+                enemies.splice(i,1);
+            }
+        }
+
+        // снаряды
+        for(let i=projectiles.length-1; i>=0; i--) {
+            let p = projectiles[i];
+            p.x += p.vx; p.y += p.vy;
+            if(p.x+p.radius<0 || p.x-p.radius>canvas.width || p.y+p.radius<0 || p.y-p.radius>canvas.height) {
+                projectiles.splice(i,1); continue;
+            }
+            let hit = false;
+            for(let j=enemies.length-1; j>=0; j--) {
+                if(circlesCollideCirc(p.x,p.y,p.radius, enemies[j].x,enemies[j].y,enemies[j].radius)) {
+                    enemies.splice(j,1);
+                    hit = true;
+                    gameScore++;
+                    // награда
+                    addCurrency("coins", 5 + Math.floor(Math.random() * 8));
+                    if(Math.random() < 0.2) addCurrency("bling", 2);
+                    if(Math.random() < 0.05) addCurrency("gems", 1);
+                    updateGameUI();
+                    break;
+                }
+            }
+            if(hit) { projectiles.splice(i,1); }
+        }
+
+        // спавн врагов с учётом режима
+        let spawnDelay = (currentMode === "onslaught") ? 25 : (currentMode === "survival" ? 50 : 45);
+        if(gameRunning && enemies.length < 10 + wave/2) {
+            if(spawnTimer <= 0) {
+                spawnEnemy();
+                if(currentMode === "onslaught" && Math.random()<0.4) spawnEnemy();
+                spawnTimer = spawnDelay;
+            } else spawnTimer--;
+        } else if(spawnTimer>0) spawnTimer--;
+
+        if(currentMode === "survival" && player.health < player.maxHealth && Math.random()<0.01) player.health = Math.min(player.maxHealth, player.health+1);
+        updateGameUI();
+        if(player.health <= 0) gameRunning = false;
+    }
+
+    function circlesCollide(a, b) { return Math.hypot(a.x-b.x, a.y-b.y) < a.radius+b.radius; }
+    function circlesCollideCirc(x1,y1,r1, x2,y2,r2) { return Math.hypot(x1-x2, y1-y2) < r1+r2; }
+
+    let keys = { ArrowUp:false, ArrowDown:false, ArrowLeft:false, ArrowRight:false, w:false,s:false,a:false,d:false };
+    let mouseX = 400, mouseY = 300;
+
+    function updateGameUI() {
+        document.getElementById("gameHp").innerText = Math.max(0, player.health);
+        document.getElementById("gameScore").innerText = gameScore;
+        document.getElementById("gameEnemies").innerText = enemies.length;
+    }
+
+    function drawGame() {
+        if(!ctx) return;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        // фон
+        ctx.fillStyle = "#2c6e3e";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        for(let e of enemies) {
+            ctx.beginPath(); ctx.arc(e.x,e.y,e.radius,0,Math.PI*2);
+            ctx.fillStyle = e.color; ctx.fill();
+            ctx.fillStyle = "white"; ctx.font="bold 18px monospace"; ctx.fillText("👿", e.x-10, e.y-8);
+        }
+        for(let p of projectiles) {
+            ctx.beginPath(); ctx.arc(p.x,p.y,5,0,Math.PI*2);
+            ctx.fillStyle = "#FFE484"; ctx.fill();
+        }
+        // игрок со скином
+        const skinEmoji = getBrawlerSkinEmoji(selectedBrawlerId);
+        ctx.beginPath(); ctx.arc(player.x,player.y,player.radius,0,Math.PI*2);
+        ctx.fillStyle = brawlers[selectedBrawlerId].color; ctx.fill();
+        ctx.font = `${player.radius+4}px monospace`; ctx.fillStyle="white";
+        ctx.fillText(skinEmoji, player.x-15, player.y+12);
+        if(player.invincibleTimer>0) { ctx.strokeStyle="gold"; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(player.x,player.y,player.radius+3,0,Math.PI*2); ctx.stroke(); }
+        // прицел
+        ctx.beginPath(); ctx.arc(mouseX,mouseY,8,0,Math.PI*2); ctx.strokeStyle="white"; ctx.stroke();
+        if(!gameRunning) { ctx.font="bold 40px sans-serif"; ctx.fillStyle="red"; ctx.fillText("GAME OVER", canvas.width/2-120, canvas.height/2); }
+    }
+
+    let canvas = document.getElementById("gameCanvas");
+    let ctx = canvas.getContext("2d");
+    function startGameLoop() {
+        if(gameLoopId) cancelAnimationFrame(gameLoopId);
+        function loop() {
+            if(gameRunning) updateGameLogic();
+            drawGame();
+            gameLoopId = requestAnimationFrame(loop);
+        }
+        loop();
+    }
+
+    // Запуск игры из меню
+    function launchGame() {
+        initGame();
+        gameRunning = true;
+        showScreen("gameScreen");
+        startGameLoop();
+    }
+
+    // Навигация по экранам
+    function showScreen(screenId) {
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+        document.getElementById(screenId).classList.add("active");
+        if(screenId === "brawlersScreen") renderBrawlersScreen();
+        if(screenId === "shopScreen") renderShopScreen();
+        if(screenId === "skinsScreen") renderSkinsScreen();
+        if(screenId === "menuScreen") { if(gameLoopId) cancelAnimationFrame(gameLoopId); gameRunning = false; }
+    }
+
+    // Обработчики
+    document.getElementById("playButton").addEventListener("click", () => launchGame());
+    document.getElementById("exitGameBtn").addEventListener("click", () => showScreen("menuScreen"));
+    document.querySelectorAll("[data-screen]").forEach(btn => btn.addEventListener("click", (e) => showScreen(e.target.dataset.screen)));
+    document.querySelectorAll(".back-btn[data-back]").forEach(btn => btn.addEventListener("click", (e) => showScreen(btn.dataset.back)));
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".mode-btn").forEach(b=>b.classList.remove("active-mode"));
+            btn.classList.add("active-mode");
+            currentMode = btn.dataset.mode;
+            saveGame();
+        });
+    });
+    // Управление мышью для стрельбы
+    canvas.addEventListener("mousemove", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const sx = canvas.width/rect.width;
+        const sy = canvas.height/rect.height;
+        mouseX = (e.clientX - rect.left)*sx;
+        mouseY = (e.clientY - rect.top)*sy;
+    });
+    canvas.addEventListener("mousedown", (e) => {
+        if(gameRunning) shootAt(mouseX, mouseY);
+        e.preventDefault();
+    });
+    window.addEventListener("keydown", (e) => { if(keys.hasOwnProperty(e.key)) { keys[e.key]=true; e.preventDefault(); } });
+    window.addEventListener("keyup", (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key]=false; });
+    canvas.addEventListener("contextmenu", e=>e.preventDefault());
+
+    loadGame();
+    updateUI();
+    showScreen("menuScreen");
+    // активировать режим по умолчанию
+    document.querySelector(`.mode-btn[data-mode="${currentMode}"]`).classList.add("active-mode");
 </script>
 </body>
 </html>
