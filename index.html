@@ -12,7 +12,6 @@
             user-select: none;
             font-family: 'Segoe UI', 'Poppins', 'Fredoka One', system-ui;
         }
-
         body {
             background: linear-gradient(145deg, #0a1f1e 0%, #06212a 100%);
             min-height: 100vh;
@@ -21,17 +20,15 @@
             align-items: center;
             padding: 20px;
         }
-
-        /* Основное меню-контейнер */
         .game-wrapper {
             background: rgba(0, 0, 0, 0.5);
             border-radius: 48px;
             padding: 20px;
             backdrop-filter: blur(6px);
             box-shadow: 0 20px 35px rgba(0,0,0,0.5);
+            width: 1000px;
+            max-width: 100%;
         }
-
-        /* Панель навигации и валют */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -44,7 +41,6 @@
             flex-wrap: wrap;
             border: 1px solid #ffdd88;
         }
-
         .currencies {
             display: flex;
             gap: 20px;
@@ -52,7 +48,6 @@
             padding: 5px 20px;
             border-radius: 40px;
         }
-
         .currency {
             display: flex;
             align-items: center;
@@ -61,16 +56,11 @@
             font-size: 1.2rem;
             color: #ffefb9;
         }
-
-        .currency span:first-child {
-            font-size: 1.4rem;
-        }
-
+        .currency span:first-child { font-size: 1.4rem; }
         .nav-buttons {
             display: flex;
             gap: 12px;
         }
-
         .nav-btn {
             background: #f7b32b;
             border: none;
@@ -82,13 +72,10 @@
             transition: 0.1s linear;
             box-shadow: 0 4px 0 #9b5e1a;
         }
-
         .nav-btn:active {
             transform: translateY(2px);
             box-shadow: 0 1px 0 #9b5e1a;
         }
-
-        /* Основной экран (меню или игра) */
         .screen {
             display: none;
             background: #00000077;
@@ -96,12 +83,9 @@
             padding: 20px;
             backdrop-filter: blur(4px);
         }
-
         .screen.active {
             display: block;
         }
-
-        /* Сетка для бойцов, скинов, магазина */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -111,7 +95,6 @@
             overflow-y: auto;
             padding: 5px;
         }
-
         .card {
             background: #2c2e2eee;
             border-radius: 28px;
@@ -122,27 +105,14 @@
             border: 2px solid #f7c56e;
             box-shadow: 0 5px 0 #7a541e;
         }
-
         .card.selected {
             border: 4px solid #ffdd66;
             background: #3e3b2c;
             transform: scale(0.98);
         }
-
-        .card h3 {
-            color: #ffeaac;
-            margin: 8px 0;
-        }
-
-        .card p {
-            color: #ddd;
-            font-size: 0.8rem;
-        }
-
-        .brawler-icon {
-            font-size: 4rem;
-        }
-
+        .card h3 { color: #ffeaac; margin: 8px 0; }
+        .card p { color: #ddd; font-size: 0.8rem; }
+        .brawler-icon { font-size: 4rem; }
         .price {
             background: #000000aa;
             display: inline-block;
@@ -151,7 +121,6 @@
             margin-top: 8px;
             font-weight: bold;
         }
-
         button.shop-btn {
             background: #4caf50;
             border: none;
@@ -161,14 +130,12 @@
             font-weight: bold;
             cursor: pointer;
         }
-
         .mode-selector {
             display: flex;
             gap: 20px;
             justify-content: center;
             margin-bottom: 20px;
         }
-
         .mode-btn {
             background: #334e4a;
             padding: 10px 24px;
@@ -178,13 +145,11 @@
             cursor: pointer;
             transition: 0.1s;
         }
-
         .mode-btn.active-mode {
             background: #f7b32b;
             color: #1f2a1b;
             box-shadow: 0 0 10px gold;
         }
-
         canvas {
             display: block;
             margin: 0 auto;
@@ -192,15 +157,15 @@
             box-shadow: 0 8px 20px black;
             cursor: crosshair;
             background: radial-gradient(circle at 30% 20%, #3b8b4c, #1d5436);
+            width: 100%;
+            height: auto;
         }
-
         .game-controls {
             margin-top: 15px;
             display: flex;
             justify-content: center;
             gap: 20px;
         }
-
         .back-btn {
             background: #bc6f2c;
             padding: 8px 25px;
@@ -209,11 +174,14 @@
             border: none;
             cursor: pointer;
         }
-
         .info-text {
             text-align: center;
             color: #ffefcf;
             margin-top: 10px;
+        }
+        @media (max-width: 700px) {
+            .currencies { gap: 10px; font-size: 0.8rem; }
+            .nav-btn { padding: 6px 12px; font-size: 0.8rem; }
         }
     </style>
 </head>
@@ -234,7 +202,7 @@
         </div>
     </div>
 
-    <!-- Экран главного меню -->
+    <!-- Главное меню -->
     <div id="menuScreen" class="screen active">
         <div style="text-align: center; padding: 20px;">
             <h1 style="color: #ffdd99; text-shadow: 3px 3px 0 #8b5a2b;">⭐ BRAWL STARS WEB ⭐</h1>
@@ -244,25 +212,25 @@
                 <div class="mode-btn" data-mode="onslaught">⚔️ Натиск</div>
             </div>
             <button id="playButton" class="nav-btn" style="font-size: 1.8rem; padding: 12px 40px; margin: 20px;">▶ ИГРАТЬ</button>
-            <div class="info-text">Выбери бойца и режим, сражайся, получай валюту и покупай скины!</div>
+            <div class="info-text">Выбери бойца, режим и сражайся! Побеждай врагов, получай валюту и покупай скины.</div>
         </div>
     </div>
 
-    <!-- Экран выбора бойцов -->
+    <!-- Бойцы -->
     <div id="brawlersScreen" class="screen">
         <h2 style="color:#ffdd99; text-align:center;">Выбери бойца</h2>
         <div class="grid" id="brawlersGrid"></div>
         <div class="game-controls"><button class="back-btn" data-back="menu">Назад</button></div>
     </div>
 
-    <!-- Экран магазина -->
+    <!-- Магазин -->
     <div id="shopScreen" class="screen">
         <h2 style="color:#ffdd99; text-align:center;">Магазин</h2>
         <div class="grid" id="shopGrid"></div>
         <div class="game-controls"><button class="back-btn" data-back="menu">Назад</button></div>
     </div>
 
-    <!-- Экран скинов -->
+    <!-- Скины -->
     <div id="skinsScreen" class="screen">
         <h2 style="color:#ffdd99; text-align:center;">Скины для бойцов</h2>
         <div class="grid" id="skinsGrid"></div>
@@ -275,99 +243,104 @@
         <div class="game-controls">
             <button id="exitGameBtn" class="back-btn">Выйти в меню</button>
         </div>
-        <div class="info-text">❤️ Здоровье: <span id="gameHp">100</span> | 🏆 Счёт: <span id="gameScore">0</span> | 🎯 Врагов: <span id="gameEnemies">0</span></div>
+        <div class="info-text">❤️ Здоровье: <span id="gameHp">100</span> | 🏆 Счёт: <span id="gameScore">0</span> | 🤖 Врагов: <span id="gameEnemies">0</span></div>
     </div>
 </div>
 
 <script>
-    // ------------------- ДАННЫЕ ИГРЫ -------------------
+    // ---------- ИНИЦИАЛИЗАЦИЯ ----------
     let gameRunning = false;
-    let currentMode = "classic";   // classic, survival, onslaught
+    let currentMode = "classic";
     let selectedBrawlerId = "shelly";
-    let activeSkin = null; // для каждого бойца отдельно: храним в объекте skinsOwned и activeSkin per brawler
+    let activeSkins = {}; // { brawlerId: skinId }
+    
+    // Валюты
     let currencies = { gems: 50, coins: 500, bling: 200, powerPoints: 30 };
-    let brawlers = {};
-    let skins = {}; // { skinId: { name, brawlerId, priceGems, priceCoins, emoji, owned } }
-    let ownedSkins = []; // список id купленных скинов
-    let activeSkins = {}; // { brawlerId: skinId } активный скин для бойца
-
-    // Определение бойцов
-    brawlers = {
-        shelly: { name: "Шелли", emoji: "🔫", baseHp: 100, speed: 5.2, attackDamage: 100, attackCooldown: 18, projectileSpeed: 9, radius: 20, color: "#F9A825", desc: "Дробовик, средняя скорость" },
-        colt: { name: "Кольт", emoji: "🤠", baseHp: 85, speed: 5.5, attackDamage: 75, attackCooldown: 12, projectileSpeed: 11, radius: 18, color: "#C7A56B", desc: "Высокая скорострельность" },
-        bull: { name: "Бык", emoji: "🐂", baseHp: 130, speed: 4.8, attackDamage: 120, attackCooldown: 22, projectileSpeed: 7.5, radius: 22, color: "#B85C1A", desc: "Танк, высокий урон" }
+    
+    // Бойцы
+    const brawlers = {
+        shelly: { name: "Шелли", emoji: "🔫", baseHp: 100, speed: 5.2, attackDamage: 100, attackCooldown: 18, projectileSpeed: 9, radius: 20, color: "#F9A825" },
+        colt: { name: "Кольт", emoji: "🤠", baseHp: 85, speed: 5.5, attackDamage: 75, attackCooldown: 12, projectileSpeed: 11, radius: 18, color: "#C7A56B" },
+        bull: { name: "Бык", emoji: "🐂", baseHp: 130, speed: 4.8, attackDamage: 120, attackCooldown: 22, projectileSpeed: 7.5, radius: 22, color: "#B85C1A" }
     };
-
-    // Скины (некоторые доступны за валюту)
-    skins = {
+    
+    // Скины
+    const skins = {
         default_shelly: { name: "Классика", brawlerId: "shelly", priceGems: 0, priceCoins: 0, emoji: "🔫", owned: true },
         golden_shelly: { name: "Золотая Шелли", brawlerId: "shelly", priceGems: 30, priceCoins: 0, emoji: "🌟", owned: false },
         dark_colt: { name: "Теневой Кольт", brawlerId: "colt", priceGems: 25, priceCoins: 0, emoji: "🌑", owned: false },
         bull_oni: { name: "Они-Бык", brawlerId: "bull", priceGems: 40, priceCoins: 0, emoji: "👹", owned: false },
         punk_shelly: { name: "Панк Шелли", brawlerId: "shelly", priceGems: 0, priceCoins: 300, emoji: "🎸", owned: false }
     };
-
-    // Магазин: предметы (улучшения, скины, очки силы)
-    let shopItems = [
+    
+    // Улучшения бойцов (очки силы)
+    let brawlerUpgrades = {};
+    for (let id in brawlers) {
+        brawlerUpgrades[id] = { hpBonus: 0, dmgBonus: 0, level: 0 };
+    }
+    
+    // Магазин
+    const shopItems = [
         { id: "pp_50", name: "50 ⚡ Очков силы", priceCoins: 150, type: "powerPoints", amount: 50 },
         { id: "pp_150", name: "150 ⚡ Очков силы", priceCoins: 400, type: "powerPoints", amount: 150 },
         { id: "bling_100", name: "100 ✨ Блингов", priceGems: 10, type: "bling", amount: 100 },
         { id: "coins_300", name: "300 🪙 Монет", priceGems: 15, type: "coins", amount: 300 }
     ];
-
-    // Улучшения бойцов (очки силы -> повышение урона и здоровья)
-    let brawlerUpgrades = {}; // { brawlerId: { hpBonus, dmgBonus, level } }
-    for (let id in brawlers) {
-        brawlerUpgrades[id] = { hpBonus: 0, dmgBonus: 0, level: 0 };
-    }
-
-    // Функция сохранения/загрузки
+    
+    // Сохранение/загрузка
     function saveGame() {
-        const data = {
-            currencies, ownedSkins, activeSkins, brawlerUpgrades, selectedBrawlerId, currentMode
-        };
+        const data = { currencies, activeSkins, brawlerUpgrades, selectedBrawlerId, currentMode };
         localStorage.setItem("brawlStarsSave", JSON.stringify(data));
     }
-
+    
     function loadGame() {
         const saved = localStorage.getItem("brawlStarsSave");
         if (saved) {
             try {
                 const data = JSON.parse(saved);
                 currencies = data.currencies || currencies;
-                ownedSkins = data.ownedSkins || [];
                 activeSkins = data.activeSkins || {};
                 brawlerUpgrades = data.brawlerUpgrades || brawlerUpgrades;
                 selectedBrawlerId = data.selectedBrawlerId || "shelly";
                 currentMode = data.currentMode || "classic";
-                // применить owned к скинам
-                for (let s of ownedSkins) if (skins[s]) skins[s].owned = true;
+                // Обновляем owned для скинов
+                for (let sid in skins) {
+                    skins[sid].owned = false;
+                }
+                // Стартовый скин по умолчанию всегда доступен
+                skins.default_shelly.owned = true;
+                // Дополнительно, если в activeSkins есть скин, он должен быть owned, но для совместимости загрузим из сохранения
+                for (let sid in skins) {
+                    if (activeSkins[skins[sid].brawlerId] === sid) {
+                        skins[sid].owned = true;
+                    }
+                }
             } catch(e) {}
         }
-        // Стартовые скины по умолчанию
-        if (!ownedSkins.includes("default_shelly")) ownedSkins.push("default_shelly");
+        // Гарантируем, что дефолтный скин у Шелли есть
         skins.default_shelly.owned = true;
         updateUI();
     }
-
+    
     function updateUI() {
         document.getElementById("gems").innerText = currencies.gems;
         document.getElementById("coins").innerText = currencies.coins;
         document.getElementById("bling").innerText = currencies.bling;
         document.getElementById("powerPoints").innerText = currencies.powerPoints;
     }
-
-    // Добавить валюту
+    
     function addCurrency(type, amount) {
-        if (currencies[type] !== undefined) currencies[type] += amount;
-        updateUI();
-        saveGame();
+        if (currencies[type] !== undefined) {
+            currencies[type] += amount;
+            updateUI();
+            saveGame();
+        }
     }
-
-    // Проверка покупки
+    
     function canAfford(priceGems, priceCoins) {
         return currencies.gems >= priceGems && currencies.coins >= priceCoins;
     }
+    
     function spend(priceGems, priceCoins) {
         if (canAfford(priceGems, priceCoins)) {
             currencies.gems -= priceGems;
@@ -378,78 +351,8 @@
         }
         return false;
     }
-
-    // Покупка скина
-    function buySkin(skinId) {
-        const skin = skins[skinId];
-        if (!skin || skin.owned) return false;
-        if (spend(skin.priceGems, skin.priceCoins)) {
-            skin.owned = true;
-            ownedSkins.push(skinId);
-            saveGame();
-            alert(`Скин ${skin.name} куплен!`);
-            renderSkinsScreen();
-            return true;
-        } else {
-            alert("Не хватает ресурсов!");
-            return false;
-        }
-    }
-
-    // Активировать скин для бойца
-    function setActiveSkin(brawlerId, skinId) {
-        const skin = skins[skinId];
-        if (skin && skin.brawlerId === brawlerId && skin.owned) {
-            activeSkins[brawlerId] = skinId;
-            saveGame();
-            renderSkinsScreen();
-        }
-    }
-
-    // Получить внешний вид бойца (эмодзи с учётом скина)
-    function getBrawlerSkinEmoji(brawlerId) {
-        const active = activeSkins[brawlerId];
-        if (active && skins[active]) return skins[active].emoji;
-        return brawlers[brawlerId].emoji;
-    }
-
-    // Рендеры экранов
-    function renderBrawlersScreen() {
-        const container = document.getElementById("brawlersGrid");
-        container.innerHTML = "";
-        for (let id in brawlers) {
-            const b = brawlers[id];
-            const upgrades = brawlerUpgrades[id];
-            const card = document.createElement("div");
-            card.className = `card ${selectedBrawlerId === id ? "selected" : ""}`;
-            card.innerHTML = `
-                <div class="brawler-icon">${getBrawlerSkinEmoji(id)}</div>
-                <h3>${b.name}</h3>
-                <p>❤️ ${b.baseHp + upgrades.hpBonus} | 💥 ${b.attackDamage + upgrades.dmgBonus}</p>
-                <p>⚡ Ур. ${upgrades.level} | ⚡ сила: ${upgrades.hpBonus/5 + upgrades.dmgBonus/2}</p>
-                <button class="shop-btn" data-upgrade="${id}">Улучшить (${50 + upgrades.level*30} 🪙 + 10⚡)</button>
-                <button class="shop-btn" data-select="${id}">Выбрать</button>
-            `;
-            container.appendChild(card);
-        }
-        container.querySelectorAll("[data-upgrade]").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const brawlerId = btn.dataset.upgrade;
-                upgradeBrawler(brawlerId);
-            });
-        });
-        container.querySelectorAll("[data-select]").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const brawlerId = btn.dataset.select;
-                selectedBrawlerId = brawlerId;
-                renderBrawlersScreen();
-                saveGame();
-            });
-        });
-    }
-
+    
+    // Улучшение бойца
     function upgradeBrawler(brawlerId) {
         const up = brawlerUpgrades[brawlerId];
         const costCoins = 50 + up.level * 30;
@@ -467,7 +370,87 @@
             alert(`Не хватает: нужно ${costCoins} 🪙 и ${costPP} ⚡`);
         }
     }
-
+    
+    // Покупка скина
+    function buySkin(skinId) {
+        const skin = skins[skinId];
+        if (!skin || skin.owned) return false;
+        if (spend(skin.priceGems, skin.priceCoins)) {
+            skin.owned = true;
+            saveGame();
+            alert(`Скин ${skin.name} куплен!`);
+            renderSkinsScreen();
+            return true;
+        } else {
+            alert("Не хватает ресурсов!");
+            return false;
+        }
+    }
+    
+    function setActiveSkin(brawlerId, skinId) {
+        const skin = skins[skinId];
+        if (skin && skin.brawlerId === brawlerId && skin.owned) {
+            activeSkins[brawlerId] = skinId;
+            saveGame();
+            renderSkinsScreen();
+            renderBrawlersScreen(); // обновить иконку бойца
+        }
+    }
+    
+    function getBrawlerIcon(brawlerId) {
+        const active = activeSkins[brawlerId];
+        if (active && skins[active]) return skins[active].emoji;
+        return brawlers[brawlerId].emoji;
+    }
+    
+    function getBrawlerStats() {
+        const b = brawlers[selectedBrawlerId];
+        const up = brawlerUpgrades[selectedBrawlerId];
+        return {
+            hp: b.baseHp + up.hpBonus,
+            damage: b.attackDamage + up.dmgBonus,
+            speed: b.speed,
+            attackCooldown: b.attackCooldown,
+            projectileSpeed: b.projectileSpeed,
+            radius: b.radius
+        };
+    }
+    
+    // ---------- ОТРИСОВКА ЭКРАНОВ ----------
+    function renderBrawlersScreen() {
+        const container = document.getElementById("brawlersGrid");
+        container.innerHTML = "";
+        for (let id in brawlers) {
+            const b = brawlers[id];
+            const up = brawlerUpgrades[id];
+            const card = document.createElement("div");
+            card.className = `card ${selectedBrawlerId === id ? "selected" : ""}`;
+            card.innerHTML = `
+                <div class="brawler-icon">${getBrawlerIcon(id)}</div>
+                <h3>${b.name}</h3>
+                <p>❤️ ${b.baseHp + up.hpBonus} | 💥 ${b.attackDamage + up.dmgBonus}</p>
+                <p>⚡ Ур. ${up.level} (${up.hpBonus/5 + up.dmgBonus/2} силы)</p>
+                <button class="shop-btn" data-upgrade="${id}">Улучшить (${50 + up.level*30}🪙 +10⚡)</button>
+                <button class="shop-btn" data-select="${id}">Выбрать</button>
+            `;
+            container.appendChild(card);
+        }
+        container.querySelectorAll("[data-upgrade]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                upgradeBrawler(btn.dataset.upgrade);
+            });
+        });
+        container.querySelectorAll("[data-select]").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                selectedBrawlerId = btn.dataset.select;
+                renderBrawlersScreen();
+                saveGame();
+            });
+        });
+    }
+    
     function renderShopScreen() {
         const container = document.getElementById("shopGrid");
         container.innerHTML = "";
@@ -476,7 +459,7 @@
             card.className = "card";
             card.innerHTML = `
                 <h3>${item.name}</h3>
-                <div class="price">💰 ${item.priceCoins > 0 ? item.priceCoins + " 🪙" : ""} ${item.priceGems > 0 ? item.priceGems + " 💎" : ""}</div>
+                <div class="price">${item.priceCoins > 0 ? item.priceCoins + " 🪙" : ""} ${item.priceGems > 0 ? item.priceGems + " 💎" : ""}</div>
                 <button class="shop-btn" data-buy="${item.id}">Купить</button>
             `;
             container.appendChild(card);
@@ -508,7 +491,7 @@
             });
         });
     }
-
+    
     function renderSkinsScreen() {
         const container = document.getElementById("skinsGrid");
         container.innerHTML = "";
@@ -521,7 +504,7 @@
             card.innerHTML = `
                 <div class="brawler-icon">${skin.emoji}</div>
                 <h3>${skin.name}</h3>
-                <p>Для: ${b.name}</p>
+                <p>${b.name}</p>
                 <p>${skin.priceGems > 0 ? skin.priceGems+" 💎" : ""} ${skin.priceCoins > 0 ? skin.priceCoins+" 🪙" : "Базовый"}</p>
                 ${!skin.owned ? `<button class="shop-btn" data-buy-skin="${sid}">Купить</button>` : `<button class="shop-btn" data-equip-skin="${sid}">Надеть</button>`}
             `;
@@ -538,31 +521,21 @@
             });
         });
     }
-
-    // ------------------- ИГРОВАЯ ЛОГИКА (АРЕНА) -------------------
-    let gameLoopId = null;
+    
+    // ---------- ИГРОВАЯ МЕХАНИКА ----------
+    let canvas = document.getElementById("gameCanvas");
+    let ctx = canvas.getContext("2d");
     let player = { x: 450, y: 275, radius: 20, health: 100, maxHealth: 100, invincibleTimer: 0, speed: 5.2 };
     let enemies = [];
     let projectiles = [];
     let shootCooldown = 0;
     let gameScore = 0;
-    let wave = 1;
     let spawnTimer = 0;
-    let currentBrawlerStats = null;
-
-    function getBrawlerStats() {
-        const b = brawlers[selectedBrawlerId];
-        const up = brawlerUpgrades[selectedBrawlerId];
-        return {
-            hp: b.baseHp + up.hpBonus,
-            damage: b.attackDamage + up.dmgBonus,
-            speed: b.speed,
-            attackCooldown: b.attackCooldown,
-            projectileSpeed: b.projectileSpeed,
-            radius: b.radius
-        };
-    }
-
+    let gameLoopId = null;
+    
+    const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false, w: false, s: false, a: false, d: false };
+    let mouseX = 450, mouseY = 275;
+    
     function initGame() {
         const stats = getBrawlerStats();
         player.health = stats.hp;
@@ -576,34 +549,28 @@
         projectiles = [];
         shootCooldown = 0;
         gameScore = 0;
-        wave = 1;
-        spawnTimer = 10;
+        spawnTimer = 15;
         updateGameUI();
     }
-
+    
     function spawnEnemy() {
-        if (!gameRunning) return;
-        let side = Math.floor(Math.random() * 4);
-        let x, y, padding = 40;
-        if(side === 0) { x = Math.random() * (canvas.width-2*padding) + padding; y = padding; }
-        else if(side === 1) { x = Math.random() * (canvas.width-2*padding) + padding; y = canvas.height - padding; }
-        else if(side === 2) { x = padding; y = Math.random() * (canvas.height-2*padding) + padding; }
-        else { x = canvas.width - padding; y = Math.random() * (canvas.height-2*padding) + padding; }
-        const enemySpeed = 1.6 + Math.random() * 0.8;
-        enemies.push({
-            x, y, radius: 16, hp: 1, speed: enemySpeed,
-            color: `hsl(${Math.random() * 30 + 340}, 70%, 55%)`
-        });
+        const side = Math.floor(Math.random() * 4);
+        let x, y, pad = 40;
+        if (side === 0) { x = Math.random() * (canvas.width - 2*pad) + pad; y = pad; }
+        else if (side === 1) { x = Math.random() * (canvas.width - 2*pad) + pad; y = canvas.height - pad; }
+        else if (side === 2) { x = pad; y = Math.random() * (canvas.height - 2*pad) + pad; }
+        else { x = canvas.width - pad; y = Math.random() * (canvas.height - 2*pad) + pad; }
+        const speed = 1.6 + Math.random() * 0.8;
+        enemies.push({ x, y, radius: 16, hp: 1, speed, color: `hsl(${Math.random() * 30 + 340}, 70%, 55%)` });
     }
-
+    
     function shootAt(targetX, targetY) {
-        if(!gameRunning) return;
-        if(shootCooldown > 0) return;
+        if (!gameRunning) return;
+        if (shootCooldown > 0) return;
         const stats = getBrawlerStats();
-        let dx = targetX - player.x;
-        let dy = targetY - player.y;
-        let len = Math.hypot(dx, dy);
-        if(len < 0.001) return;
+        let dx = targetX - player.x, dy = targetY - player.y;
+        const len = Math.hypot(dx, dy);
+        if (len < 0.001) return;
         dx /= len; dy /= len;
         projectiles.push({
             x: player.x, y: player.y, radius: 6,
@@ -612,187 +579,228 @@
         });
         shootCooldown = stats.attackCooldown;
     }
-
-    function updateGameLogic() {
-        if(!gameRunning) return;
+    
+    function updateGame() {
+        if (!gameRunning) return;
         const stats = getBrawlerStats();
-        // движение WASD
+        // Движение
         let moveX = 0, moveY = 0;
-        if(keys.ArrowUp || keys.w) moveY -= 1;
-        if(keys.ArrowDown || keys.s) moveY += 1;
-        if(keys.ArrowLeft || keys.a) moveX -= 1;
-        if(keys.ArrowRight || keys.d) moveX += 1;
-        if(moveX !== 0 || moveY !== 0) { let len = Math.hypot(moveX, moveY); moveX/=len; moveY/=len; }
+        if (keys.ArrowUp || keys.w) moveY -= 1;
+        if (keys.ArrowDown || keys.s) moveY += 1;
+        if (keys.ArrowLeft || keys.a) moveX -= 1;
+        if (keys.ArrowRight || keys.d) moveX += 1;
+        if (moveX !== 0 || moveY !== 0) {
+            const len = Math.hypot(moveX, moveY);
+            moveX /= len; moveY /= len;
+        }
         player.x += moveX * player.speed;
         player.y += moveY * player.speed;
-        player.x = Math.min(Math.max(player.x, player.radius+5), canvas.width - player.radius-5);
-        player.y = Math.min(Math.max(player.y, player.radius+5), canvas.height - player.radius-5);
-
-        if(player.invincibleTimer > 0) player.invincibleTimer--;
-        if(shootCooldown > 0) shootCooldown--;
-
-        // враги
-        for(let e of enemies) {
-            let dx = player.x - e.x, dy = player.y - e.y;
-            let dist = Math.hypot(dx, dy);
-            if(dist > 0.01) { e.x += (dx/dist)*e.speed; e.y += (dy/dist)*e.speed; }
-            e.x = Math.min(Math.max(e.x, e.radius+5), canvas.width - e.radius-5);
-            e.y = Math.min(Math.max(e.y, e.radius+5), canvas.height - e.radius-5);
+        player.x = Math.min(Math.max(player.x, player.radius + 5), canvas.width - player.radius - 5);
+        player.y = Math.min(Math.max(player.y, player.radius + 5), canvas.height - player.radius - 5);
+        
+        if (player.invincibleTimer > 0) player.invincibleTimer--;
+        if (shootCooldown > 0) shootCooldown--;
+        
+        // Движение врагов
+        for (let e of enemies) {
+            const dx = player.x - e.x, dy = player.y - e.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist > 0.01) {
+                e.x += (dx / dist) * e.speed;
+                e.y += (dy / dist) * e.speed;
+            }
+            e.x = Math.min(Math.max(e.x, e.radius + 5), canvas.width - e.radius - 5);
+            e.y = Math.min(Math.max(e.y, e.radius + 5), canvas.height - e.radius - 5);
         }
-
-        // столкновения враг-игрок
-        for(let i=enemies.length-1; i>=0; i--) {
-            if(circlesCollide(player, enemies[i])) {
-                if(player.invincibleTimer <= 0) {
+        
+        // Столкновение врагов с игроком
+        for (let i = enemies.length-1; i >= 0; i--) {
+            const e = enemies[i];
+            const dist = Math.hypot(player.x - e.x, player.y - e.y);
+            if (dist < player.radius + e.radius) {
+                if (player.invincibleTimer <= 0) {
                     player.health -= 20;
                     player.invincibleTimer = 25;
-                    if(player.health <= 0) { gameRunning = false; updateGameUI(); }
+                    if (player.health <= 0) gameRunning = false;
                 }
                 enemies.splice(i,1);
             }
         }
-
-        // снаряды
-        for(let i=projectiles.length-1; i>=0; i--) {
-            let p = projectiles[i];
+        
+        // Снаряды
+        for (let i = projectiles.length-1; i >= 0; i--) {
+            const p = projectiles[i];
             p.x += p.vx; p.y += p.vy;
-            if(p.x+p.radius<0 || p.x-p.radius>canvas.width || p.y+p.radius<0 || p.y-p.radius>canvas.height) {
-                projectiles.splice(i,1); continue;
+            if (p.x + p.radius < 0 || p.x - p.radius > canvas.width || p.y + p.radius < 0 || p.y - p.radius > canvas.height) {
+                projectiles.splice(i,1);
+                continue;
             }
             let hit = false;
-            for(let j=enemies.length-1; j>=0; j--) {
-                if(circlesCollideCirc(p.x,p.y,p.radius, enemies[j].x,enemies[j].y,enemies[j].radius)) {
+            for (let j = enemies.length-1; j >= 0; j--) {
+                const e = enemies[j];
+                if (Math.hypot(p.x - e.x, p.y - e.y) < p.radius + e.radius) {
                     enemies.splice(j,1);
                     hit = true;
                     gameScore++;
-                    // награда
+                    // Награда
                     addCurrency("coins", 5 + Math.floor(Math.random() * 8));
-                    if(Math.random() < 0.2) addCurrency("bling", 2);
-                    if(Math.random() < 0.05) addCurrency("gems", 1);
+                    if (Math.random() < 0.2) addCurrency("bling", 2);
+                    if (Math.random() < 0.05) addCurrency("gems", 1);
                     updateGameUI();
                     break;
                 }
             }
-            if(hit) { projectiles.splice(i,1); }
+            if (hit) projectiles.splice(i,1);
         }
-
-        // спавн врагов с учётом режима
-        let spawnDelay = (currentMode === "onslaught") ? 25 : (currentMode === "survival" ? 50 : 45);
-        if(gameRunning && enemies.length < 10 + wave/2) {
-            if(spawnTimer <= 0) {
+        
+        // Спавн врагов в зависимости от режима
+        let maxEnemies = 10;
+        let baseDelay = 45;
+        if (currentMode === "onslaught") { maxEnemies = 14; baseDelay = 28; }
+        if (currentMode === "survival") { maxEnemies = 8; baseDelay = 55; }
+        if (enemies.length < maxEnemies) {
+            if (spawnTimer <= 0) {
                 spawnEnemy();
-                if(currentMode === "onslaught" && Math.random()<0.4) spawnEnemy();
-                spawnTimer = spawnDelay;
+                if (currentMode === "onslaught" && Math.random() < 0.4) spawnEnemy();
+                spawnTimer = baseDelay;
             } else spawnTimer--;
-        } else if(spawnTimer>0) spawnTimer--;
-
-        if(currentMode === "survival" && player.health < player.maxHealth && Math.random()<0.01) player.health = Math.min(player.maxHealth, player.health+1);
+        } else if (spawnTimer > 0) spawnTimer--;
+        
+        // Режим выживания: регенерация
+        if (currentMode === "survival" && player.health < player.maxHealth && Math.random() < 0.015) {
+            player.health = Math.min(player.maxHealth, player.health + 1);
+        }
+        
         updateGameUI();
-        if(player.health <= 0) gameRunning = false;
+        if (player.health <= 0) gameRunning = false;
     }
-
-    function circlesCollide(a, b) { return Math.hypot(a.x-b.x, a.y-b.y) < a.radius+b.radius; }
-    function circlesCollideCirc(x1,y1,r1, x2,y2,r2) { return Math.hypot(x1-x2, y1-y2) < r1+r2; }
-
-    let keys = { ArrowUp:false, ArrowDown:false, ArrowLeft:false, ArrowRight:false, w:false,s:false,a:false,d:false };
-    let mouseX = 400, mouseY = 300;
-
+    
     function updateGameUI() {
         document.getElementById("gameHp").innerText = Math.max(0, player.health);
         document.getElementById("gameScore").innerText = gameScore;
         document.getElementById("gameEnemies").innerText = enemies.length;
     }
-
+    
     function drawGame() {
-        if(!ctx) return;
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         // фон
         ctx.fillStyle = "#2c6e3e";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        for(let e of enemies) {
-            ctx.beginPath(); ctx.arc(e.x,e.y,e.radius,0,Math.PI*2);
-            ctx.fillStyle = e.color; ctx.fill();
-            ctx.fillStyle = "white"; ctx.font="bold 18px monospace"; ctx.fillText("👿", e.x-10, e.y-8);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // враги
+        for (let e of enemies) {
+            ctx.beginPath();
+            ctx.arc(e.x, e.y, e.radius, 0, Math.PI*2);
+            ctx.fillStyle = e.color;
+            ctx.fill();
+            ctx.fillStyle = "white";
+            ctx.font = "bold 18px monospace";
+            ctx.fillText("👿", e.x-10, e.y-8);
         }
-        for(let p of projectiles) {
-            ctx.beginPath(); ctx.arc(p.x,p.y,5,0,Math.PI*2);
-            ctx.fillStyle = "#FFE484"; ctx.fill();
+        // снаряды
+        for (let p of projectiles) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 5, 0, Math.PI*2);
+            ctx.fillStyle = "#FFE484";
+            ctx.fill();
         }
-        // игрок со скином
-        const skinEmoji = getBrawlerSkinEmoji(selectedBrawlerId);
-        ctx.beginPath(); ctx.arc(player.x,player.y,player.radius,0,Math.PI*2);
-        ctx.fillStyle = brawlers[selectedBrawlerId].color; ctx.fill();
-        ctx.font = `${player.radius+4}px monospace`; ctx.fillStyle="white";
-        ctx.fillText(skinEmoji, player.x-15, player.y+12);
-        if(player.invincibleTimer>0) { ctx.strokeStyle="gold"; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(player.x,player.y,player.radius+3,0,Math.PI*2); ctx.stroke(); }
+        // игрок
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2);
+        ctx.fillStyle = brawlers[selectedBrawlerId].color;
+        ctx.fill();
+        ctx.font = `${player.radius+4}px monospace`;
+        ctx.fillStyle = "white";
+        ctx.fillText(getBrawlerIcon(selectedBrawlerId), player.x-15, player.y+12);
+        if (player.invincibleTimer > 0) {
+            ctx.strokeStyle = "gold";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.radius+3, 0, Math.PI*2);
+            ctx.stroke();
+        }
         // прицел
-        ctx.beginPath(); ctx.arc(mouseX,mouseY,8,0,Math.PI*2); ctx.strokeStyle="white"; ctx.stroke();
-        if(!gameRunning) { ctx.font="bold 40px sans-serif"; ctx.fillStyle="red"; ctx.fillText("GAME OVER", canvas.width/2-120, canvas.height/2); }
-    }
-
-    let canvas = document.getElementById("gameCanvas");
-    let ctx = canvas.getContext("2d");
-    function startGameLoop() {
-        if(gameLoopId) cancelAnimationFrame(gameLoopId);
-        function loop() {
-            if(gameRunning) updateGameLogic();
-            drawGame();
-            gameLoopId = requestAnimationFrame(loop);
+        ctx.beginPath();
+        ctx.arc(mouseX, mouseY, 8, 0, Math.PI*2);
+        ctx.strokeStyle = "white";
+        ctx.stroke();
+        if (!gameRunning && player.health <= 0) {
+            ctx.font = "bold 40px sans-serif";
+            ctx.fillStyle = "red";
+            ctx.fillText("GAME OVER", canvas.width/2-120, canvas.height/2);
         }
-        loop();
     }
-
-    // Запуск игры из меню
-    function launchGame() {
+    
+    function gameLoop() {
+        if (gameRunning) updateGame();
+        drawGame();
+        gameLoopId = requestAnimationFrame(gameLoop);
+    }
+    
+    function startGame() {
         initGame();
         gameRunning = true;
         showScreen("gameScreen");
-        startGameLoop();
+        if (gameLoopId) cancelAnimationFrame(gameLoopId);
+        gameLoop();
     }
-
-    // Навигация по экранам
+    
+    // ---------- НАВИГАЦИЯ ----------
     function showScreen(screenId) {
         document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
         document.getElementById(screenId).classList.add("active");
-        if(screenId === "brawlersScreen") renderBrawlersScreen();
-        if(screenId === "shopScreen") renderShopScreen();
-        if(screenId === "skinsScreen") renderSkinsScreen();
-        if(screenId === "menuScreen") { if(gameLoopId) cancelAnimationFrame(gameLoopId); gameRunning = false; }
+        if (screenId === "brawlersScreen") renderBrawlersScreen();
+        if (screenId === "shopScreen") renderShopScreen();
+        if (screenId === "skinsScreen") renderSkinsScreen();
+        if (screenId === "menuScreen") {
+            gameRunning = false;
+            if (gameLoopId) cancelAnimationFrame(gameLoopId);
+            gameLoopId = null;
+        }
     }
-
-    // Обработчики
-    document.getElementById("playButton").addEventListener("click", () => launchGame());
+    
+    // Обработчики событий
+    document.getElementById("playButton").addEventListener("click", startGame);
     document.getElementById("exitGameBtn").addEventListener("click", () => showScreen("menuScreen"));
-    document.querySelectorAll("[data-screen]").forEach(btn => btn.addEventListener("click", (e) => showScreen(e.target.dataset.screen)));
-    document.querySelectorAll(".back-btn[data-back]").forEach(btn => btn.addEventListener("click", (e) => showScreen(btn.dataset.back)));
+    document.querySelectorAll("[data-screen]").forEach(btn => {
+        btn.addEventListener("click", (e) => showScreen(e.target.dataset.screen));
+    });
+    document.querySelectorAll(".back-btn[data-back]").forEach(btn => {
+        btn.addEventListener("click", (e) => showScreen(btn.dataset.back));
+    });
     document.querySelectorAll(".mode-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            document.querySelectorAll(".mode-btn").forEach(b=>b.classList.remove("active-mode"));
+            document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active-mode"));
             btn.classList.add("active-mode");
             currentMode = btn.dataset.mode;
             saveGame();
         });
     });
-    // Управление мышью для стрельбы
+    
     canvas.addEventListener("mousemove", (e) => {
         const rect = canvas.getBoundingClientRect();
-        const sx = canvas.width/rect.width;
-        const sy = canvas.height/rect.height;
-        mouseX = (e.clientX - rect.left)*sx;
-        mouseY = (e.clientY - rect.top)*sy;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        mouseX = (e.clientX - rect.left) * scaleX;
+        mouseY = (e.clientY - rect.top) * scaleY;
+        mouseX = Math.min(Math.max(mouseX, 0), canvas.width);
+        mouseY = Math.min(Math.max(mouseY, 0), canvas.height);
     });
     canvas.addEventListener("mousedown", (e) => {
-        if(gameRunning) shootAt(mouseX, mouseY);
+        if (gameRunning) shootAt(mouseX, mouseY);
         e.preventDefault();
     });
-    window.addEventListener("keydown", (e) => { if(keys.hasOwnProperty(e.key)) { keys[e.key]=true; e.preventDefault(); } });
-    window.addEventListener("keyup", (e) => { if(keys.hasOwnProperty(e.key)) keys[e.key]=false; });
-    canvas.addEventListener("contextmenu", e=>e.preventDefault());
-
+    window.addEventListener("keydown", (e) => {
+        if (keys.hasOwnProperty(e.key)) { keys[e.key] = true; e.preventDefault(); }
+    });
+    window.addEventListener("keyup", (e) => {
+        if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
+    });
+    canvas.addEventListener("contextmenu", e => e.preventDefault());
+    
+    // Запуск
     loadGame();
     updateUI();
     showScreen("menuScreen");
-    // активировать режим по умолчанию
     document.querySelector(`.mode-btn[data-mode="${currentMode}"]`).classList.add("active-mode");
 </script>
 </body>
